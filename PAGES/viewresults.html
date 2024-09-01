@@ -1,0 +1,248 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Results</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background: #f9fafb; /* Light background for a clean look */
+            color: #1f2937; /* Dark text color for readability */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            perspective: 1000px; /* Add perspective for 3D effect */
+        }
+        .results-container {
+            width: 90%;
+            max-width: 700px; /* Container width remains consistent */
+            background: #ffffff; /* White background for the container */
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .results-content {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            width: 100%;
+        }
+        .results-card {
+            background: #f0f4f8; /* Light card background */
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            padding: 15px;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.6s, box-shadow 0.3s;
+            cursor: pointer;
+            text-align: center;
+            height: 150px; /* Fixed height for flip effect */
+            transform-style: preserve-3d;
+            perspective: 1000px; /* Add perspective for 3D flip effect */
+        }
+        .results-card h3 {
+            margin: 0;
+            font-size: 1.125rem;
+            color: #3b82f6; /* Primary color for headings */
+        }
+        .results-card .card-inner {
+            position: relative;
+            height: 100%;
+            width: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .results-card:hover .card-inner {
+            transform: rotateY(180deg); /* Flip on hover */
+        }
+        .results-card .card-front,
+        .results-card .card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden; /* Hide the back face during rotation */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.3s, color 0.3s;
+        }
+        .results-card .card-front {
+            background: #ffffff; /* Background for the front */
+        }
+        .results-card .card-back {
+            background: #f0f4f8; /* Background for the back */
+            color: #333;
+            transform: rotateY(180deg); /* Rotate the back side */
+            padding: 15px;
+            text-align: center;
+        }
+        .results-card .name {
+            font-size: 1rem;
+            color: #4b5563; /* Darker text color for results */
+        }
+    </style>
+    <link href = "../stylesheets/stylesheet2.css" rel = "Stylesheet" type = "text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- <style> 
+         Add any additional CSS here, if needed 
+        .selector-active {
+            position: absolute;
+            background-color: #f0f0f0;
+            transition: all 0.3s ease;
+        }
+    </style> -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+    <script>
+        $(document).ready(function() {
+            var tabsVerticalInner = $('#accordian');
+            var selectorVerticalInner = $('#accordian').find('li').length;
+            var activeItemVerticalInner = tabsVerticalInner.find('.active');
+            var activeWidthVerticalHeight = activeItemVerticalInner.innerHeight();
+            var activeWidthVerticalWidth = activeItemVerticalInner.innerWidth();
+            var itemPosVerticalTop = activeItemVerticalInner.position();
+            var itemPosVerticalLeft = activeItemVerticalInner.position();
+
+            $(".selector-active").css({
+                "top": itemPosVerticalTop.top + "px", 
+                "left": itemPosVerticalLeft.left + "px",
+                "height": activeWidthVerticalHeight + "px",
+                "width": activeWidthVerticalWidth + "px"
+            });
+
+            $("#accordian").on("click", "li", function(e) {
+                $('#accordian ul li').removeClass("active");
+                $(this).addClass('active');
+                var activeWidthVerticalHeight = $(this).innerHeight();
+                var activeWidthVerticalWidth = $(this).innerWidth();
+                var itemPosVerticalTop = $(this).position();
+                var itemPosVerticalLeft = $(this).position();
+                $(".selector-active").css({
+                    "top": itemPosVerticalTop.top + "px", 
+                    "left": itemPosVerticalLeft.left + "px",
+                    "height": activeWidthVerticalHeight + "px",
+                    "width": activeWidthVerticalWidth + "px"
+                });
+            });
+
+            // --------------add active class-on another-page move----------
+            // Get current path and find target link
+            var path = window.location.pathname.split("/").pop();
+
+            // Account for home page with empty path
+            if (path == '') {
+                path = 'home.html';
+            }
+
+            var target = $('#accordian ul li a[href="'+path+'"]');
+            // Add active class to target link
+            target.parent().addClass('active');
+        });
+    </script>
+</head>
+<body>
+    <div id="accordian">
+        <ul class="show-dropdown main-navbar">
+            <div class="selector-active"><div class="top"></div><div class="bottom"></div></div>
+            <li>
+                <a href="home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            </li>
+            <li>
+                <a href="createpp.html"><i class="far fa-address-book"></i>Create Profile</a>
+            </li>
+            <li>
+                <a href="profiles.html"><i class="far fa-clone"></i>Profiles</a>
+            </li>
+            <li>
+                <a href="castvote.html"><i class="far fa-calendar-alt"></i>Cast Vote</a>
+            </li>
+            <li class="active">
+                <a href="viewresults.html"><i class="far fa-chart-bar"></i>View Results</a>
+            </li>
+        </ul>
+    </div>
+    <div class="results-container">
+        <div class="results-content">
+            <!-- Results will be dynamically added here -->
+        </div>
+    </div>
+
+    <script>
+     // Function to get the most recent vote from localStorage
+function getMostRecentVote() {
+    const allVotes = JSON.parse(localStorage.getItem('votes')) || [];
+    if (allVotes.length === 0) {
+        console.log("No votes found.");
+        return null;
+    }
+    // Assuming the most recent vote is the last one in the array
+    return allVotes[allVotes.length - 1];
+}
+
+// Function to display results
+function displayResults() {
+    const resultsContent = document.querySelector('.results-content');
+    const mostRecentVote = getMostRecentVote();
+
+    // Default results data
+    const results = {
+        president: "Not selected",
+        deputyPresident: "Not selected",
+        treasurer: "Not selected",
+        liaison: "Not selected",
+        secretary: "Not selected",
+        academicOfficer: "Not selected",
+        schoolScienceTech: "Not selected",
+        schoolPharmacy: "Not selected",
+        schoolMedicine: "Not selected",
+        schoolOralHealth: "Not selected",
+        schoolHealthSciences: "Not selected"
+    };
+
+    // Update results with the most recent vote if available
+    if (mostRecentVote) {
+        results.president = mostRecentVote.president || "Not selected";
+        results.deputyPresident = mostRecentVote.deputyPresident || "Not selected";
+        results.treasurer = mostRecentVote.treasurer || "Not selected";
+        results.liaison = mostRecentVote.liaison || "Not selected";
+        results.secretary = mostRecentVote.secretary || "Not selected";
+        results.academicOfficer = mostRecentVote.academicOfficer || "Not selected";
+        results[mostRecentVote.selectedSchool] = mostRecentVote.schoolVote || "Not selected";
+    }
+
+    // Generate results HTML
+    let resultsHTML = '';
+    for (const [position, candidate] of Object.entries(results)) {
+        resultsHTML += `
+            <div class="results-card">
+                <div class="card-inner">
+                    <div class="card-front">
+                        <h3>${position.replace(/([A-Z])/g, ' $1').toUpperCase()}</h3>
+                    </div>
+                    <div class="card-back">
+                        <div class="name">${candidate}</div>
+                    </div>
+                </div>
+            </div>
+        `;
+    }
+
+    resultsContent.innerHTML = resultsHTML;
+}
+
+// Call the function to display results on page load
+document.addEventListener('DOMContentLoaded', displayResults);
+
+    </script>
+</body>

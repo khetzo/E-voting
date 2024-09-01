@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+        <meta charset="UTF-8">
+        <title> Home Page </title>
+       <link href = "../stylesheets/stylesheet2.css" rel = "Stylesheet" type = "text/css" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <!-- <style> 
+             Add any additional CSS here, if needed 
+            .selector-active {
+                position: absolute;
+                background-color: #f0f0f0;
+                transition: all 0.3s ease;
+            }
+        </style> -->
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> 
+        <script>
+            $(document).ready(function() {
+                var tabsVerticalInner = $('#accordian');
+                var selectorVerticalInner = $('#accordian').find('li').length;
+                var activeItemVerticalInner = tabsVerticalInner.find('.active');
+                var activeWidthVerticalHeight = activeItemVerticalInner.innerHeight();
+                var activeWidthVerticalWidth = activeItemVerticalInner.innerWidth();
+                var itemPosVerticalTop = activeItemVerticalInner.position();
+                var itemPosVerticalLeft = activeItemVerticalInner.position();
+    
+                $(".selector-active").css({
+                    "top": itemPosVerticalTop.top + "px", 
+                    "left": itemPosVerticalLeft.left + "px",
+                    "height": activeWidthVerticalHeight + "px",
+                    "width": activeWidthVerticalWidth + "px"
+                });
+    
+                $("#accordian").on("click", "li", function(e) {
+                    $('#accordian ul li').removeClass("active");
+                    $(this).addClass('active');
+                    var activeWidthVerticalHeight = $(this).innerHeight();
+                    var activeWidthVerticalWidth = $(this).innerWidth();
+                    var itemPosVerticalTop = $(this).position();
+                    var itemPosVerticalLeft = $(this).position();
+                    $(".selector-active").css({
+                        "top": itemPosVerticalTop.top + "px", 
+                        "left": itemPosVerticalLeft.left + "px",
+                        "height": activeWidthVerticalHeight + "px",
+                        "width": activeWidthVerticalWidth + "px"
+                    });
+                });
+    
+                // --------------add active class-on another-page move----------
+                // Get current path and find target link
+                var path = window.location.pathname.split("/").pop();
+    
+                // Account for home page with empty path
+                if (path == '') {
+                    path = 'home.html';
+                }
+    
+                var target = $('#accordian ul li a[href="'+path+'"]');
+                // Add active class to target link
+                target.parent().addClass('active');
+            });
+      
+      
+      </script>
+</head>
+</html>
+<body>
+    <div id="accordian">
+        <ul class="show-dropdown main-navbar">
+            <div class="selector-active"><div class="top"></div><div class="bottom"></div></div>
+            <li class="active">
+                <a href="home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
+            </li>
+            <li>
+                <a href="createpp.html"><i class="far fa-address-book"></i>Create Profile</a>
+            </li>
+            <li>
+                <a href="profiles.html"><i class="far fa-clone"></i>Profiles</a>
+            </li>
+            <li>
+                <a href="castvote.html"><i class="far fa-calendar-alt"></i>Cast Vote</a>
+            </li>
+            <li>
+                <a href="viewresults.html"><i class="far fa-chart-bar"></i>View Results</a>
+            </li>
+        </ul>
+    </div>
+</body>
