@@ -17,7 +17,10 @@ function getUserInputs() {
     } else if (!validateEmail(userStudentEmail)) {
       setError(studentEmailInput, "Please enter a valid email address.");
       isValid = false;
-    } else {
+    } else if (isEmailRegistered(userStudentEmail)) {
+      setError(studentEmailInput, "This email is already registered. Please use a different email.");
+      isValid = false;
+    }else {
       clearError(studentEmailInput);
     }
   
@@ -50,10 +53,18 @@ function getUserInputs() {
   
   // Function to validate email format
   function validateEmail(email) {
-    const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const emailPattern = /^[0-9]{9}@swave\.smu\.ac\.za$/;
     return emailPattern.test(email);
   }
   
+  // Function to check if the email is already registered
+function isEmailRegistered(email) {
+  // This is a simple example using localStorage.
+  // Replace with your actual logic if you are using a database or other storage method.
+  const registeredEmail = localStorage.getItem('userStudentEmail');
+  return registeredEmail === email;
+}
+
   // Function to set error styling and message
   function setError(inputElement, message) {
     inputElement.classList.add('error');
