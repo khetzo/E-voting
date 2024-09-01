@@ -15,7 +15,7 @@ function getUserInputs() {
       setError(studentEmailInput, "Student Email is required.");
       isValid = false;
     } else if (!validateEmail(userStudentEmail)) {
-      setError(studentEmailInput, "Please enter a valid email address.");
+      setError(studentEmailInput, "Please enter a valid  SMU Email address.");
       isValid = false;
     } else if (isEmailRegistered(userStudentEmail)) {
       setError(studentEmailInput, "This email is already registered. Please use a different email.");
@@ -47,6 +47,7 @@ function getUserInputs() {
     if (isValid) {
       localStorage.setItem('userStudentEmail', userStudentEmail);
       localStorage.setItem('userPassword', password);
+      sendEmailNotification(userStudentEmail);  // Send email notification after registration
       window.location.href = "../createpp.html";  // Replace with your actual URL
     }
   }
@@ -56,7 +57,7 @@ function getUserInputs() {
     const emailPattern = /^[0-9]{9}@swave\.smu\.ac\.za$/;
     return emailPattern.test(email);
   }
-  
+
   // Function to check if the email is already registered
 function isEmailRegistered(email) {
   // This is a simple example using localStorage.
@@ -77,7 +78,26 @@ function isEmailRegistered(email) {
     inputElement.classList.remove('error');
     inputElement.classList.add('normal');
   }
+
   
+  // Function to send email notification after registration
+function sendEmailNotification(email) {
+  fetch('http://localhost:3000/send-email', {  // Replace with your actual backend endpoint
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({ email: email })
+  })
+  .then(response => response.json())
+  .then(data => {
+    console.log('Email sent successfully:', data);
+  })
+  .catch(error => {
+    console.error('Error sending email:', error);
+  });
+}
+
   // Login function to check user credentials
   function loginUser() {
     const logInUserEmailInput = document.getElementById("UserLogInEmail");
