@@ -1,123 +1,145 @@
 function getUserInputs() {
-    // Get user input values
-    const studentEmailInput = document.getElementById("studentEmail");
-    const passwordInput = document.getElementById("password");
-    const confirmPasswordInput = document.getElementById("ConfirmPassword");
-  
-    const userStudentEmail = studentEmailInput.value;
-    const password = passwordInput.value;
-    const confirmPassword = confirmPasswordInput.value;
-  
-    let isValid = true;  // Flag to check if all inputs are valid
-  
-    // Validate Student Email
-    if (!userStudentEmail) {
-      setError(studentEmailInput, "Student Email is required.");
-      isValid = false;
-    } else if (!validateEmail(userStudentEmail)) {
-      setError(studentEmailInput, "Please enter a valid  SMU Email address.");
-      isValid = false;
-    } else if (isEmailRegistered(userStudentEmail)) {
-      setError(studentEmailInput, "This email is already registered. Please use a different email.");
-      isValid = false;
-    }else {
-      clearError(studentEmailInput);
-    }
-  
-    // Validate Password
-    if (!password) {
-      setError(passwordInput, "Password is required.");
-      isValid = false;
-    } else {
-      clearError(passwordInput);
-    }
-  
-    // Validate Confirm Password
-    if (!confirmPassword) {
-      setError(confirmPasswordInput, "Confirm Password is required.");
-      isValid = false;
-    } else if (password !== confirmPassword) {
-      setError(confirmPasswordInput, "Passwords do not match.");
-      isValid = false;
-    } else {
-      clearError(confirmPasswordInput);
-    }
-  
-    // If all inputs are valid, save to localStorage and redirect
-    if (isValid) {
-      localStorage.setItem('userStudentEmail', userStudentEmail);
-      localStorage.setItem('userPassword', password);
-      sendEmailNotification(userStudentEmail);  // Send email notification after registration
-      window.location.href = "../createpp.html";  // Replace with your actual URL
-    }
-  }
-  
-  // Function to validate email format
-  function validateEmail(email) {
-    const emailPattern = /^[0-9]{9}@swave\.smu\.ac\.za$/;
-    return emailPattern.test(email);
+  // Get user input values
+  const studentEmailInput = document.getElementById("studentEmail");
+  const passwordInput = document.getElementById("password");
+  const confirmPasswordInput = document.getElementById("ConfirmPassword");
+
+  const userStudentEmail = studentEmailInput.value;
+  const password = passwordInput.value;
+  const confirmPassword = confirmPasswordInput.value;
+
+  let isValid = true;  // Flag to check if all inputs are valid
+
+  // Validate Student Email
+  if (!userStudentEmail) {
+    setError(studentEmailInput, "Student Email is required.");
+    isValid = false;
+  } else if (!validateEmail(userStudentEmail)) {
+    setError(studentEmailInput, "Please enter a valid  SMU//{email} Email address.");
+    isValid = false;
+  } else if (isEmailRegistered(userStudentEmail)) {
+    setError(studentEmailInput, "This email is already registered. Please use a different email.");
+    isValid = false;
+  }else {
+    clearError(studentEmailInput);
   }
 
-  // Function to check if the email is already registered
+  // Validate Password
+  if (!password) {
+    setError(passwordInput, "Password is required.");
+    isValid = false;
+  } else {
+    clearError(passwordInput);
+  }
+
+  // Validate Confirm Password
+  if (!confirmPassword) {
+    setError(confirmPasswordInput, "Confirm Password is required.");
+    isValid = false;
+  } else if (password !== confirmPassword) {
+    setError(confirmPasswordInput, "Passwords do not match.");
+    isValid = false;
+  } else {
+    clearError(confirmPasswordInput);
+  }
+
+  // If all inputs are valid, save to localStorage and redirect
+  if (isValid) {
+    localStorage.setItem('userStudentEmail', userStudentEmail);
+    localStorage.setItem('userPassword', password);
+    sendEmailNotification(userStudentEmail);  // Send email notification after registration
+    window.location.href = "../createpp.html";  // Replace with your actual URL
+  }
+}
+
+// Function to validate email format
+function validateEmail(email) {
+  const emailPattern = /^[a-zA-Z0-9._%+-]+@gmail\.com$/;
+
+  //const emailPattern = /^[0-9]{9}@swave\.smu\.ac\.za$/;
+  return emailPattern.test(email);
+}
+
+// Function to check if the email is already registered
 function isEmailRegistered(email) {
-  // This is a simple example using localStorage.
-  // Replace with your actual logic if you are using a database or other storage method.
-  const registeredEmail = localStorage.getItem('userStudentEmail');
-  return registeredEmail === email;
+// This is a simple example using localStorage.
+// Replace with your actual logic if you are using a database or other storage method.
+const registeredEmail = localStorage.getItem('userStudentEmail');
+return registeredEmail === email;
 }
 
-  // Function to set error styling and message
-  function setError(inputElement, message) {
-    inputElement.classList.add('error');
-    inputElement.classList.remove('normal');
-    alert(message);  // Optional: Alert message or you can use a tooltip/message below the input
-  }
-  
-  // Function to clear error styling
-  function clearError(inputElement) {
-    inputElement.classList.remove('error');
-    inputElement.classList.add('normal');
-  }
+// Function to set error styling and message
+function setError(inputElement, message) {
+  inputElement.classList.add('error');
+  inputElement.classList.remove('normal');
+  alert(message);  // Optional: Alert message or you can use a tooltip/message below the input
+}
 
-  
-  // Function to send email notification after registration
+// Function to clear error styling
+function clearError(inputElement) {
+  inputElement.classList.remove('error');
+  inputElement.classList.add('normal');
+}
+
+
+// Function to send email notification after registration
 function sendEmailNotification(email) {
-  fetch('http://localhost:3000/send-email', {  // Replace with your actual backend endpoint
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({ email: email })
-  })
-  .then(response => response.json())
-  .then(data => {
-    console.log('Email sent successfully:', data);
-  })
-  .catch(error => {
-    console.error('Error sending email:', error);
-  });
+fetch('http://localhost:3000/send-email', {  // Replace with your actual backend endpoint
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({ email: email })
+})
+.then(response => response.json())
+.then(data => {
+  console.log('Email sent successfully:', data);
+})
+.catch(error => {
+  console.error('Error sending email:', error);
+});
 }
 
-  // Login function to check user credentials
-  function loginUser() {
-    const logInUserEmailInput = document.getElementById("UserLogInEmail");
-    const logInPasswordInput = document.getElementById("UserLogINPassword");
-  
-    const logInUserEmail = logInUserEmailInput.value;
-    const logInPassword = logInPasswordInput.value;
-  
-    const storedUserEmail = localStorage.getItem('userStudentEmail');
-    const storedPassword = localStorage.getItem('userPassword');
-  
-    if (!logInUserEmail || !logInPassword) {
-      alert("Please enter both email and password.");
-    } else if (logInUserEmail === storedUserEmail && logInPassword === storedPassword) {
-      alert("Welcome back, Comrade!");
-  
-      // window.location.href = "../home.html";  // Navigate to home
-      window.location.href = "../createpp.html";  // Navigate to createpp
-    } else {
-      alert("Incorrect email or password. Please try again.");
-    }
+// Login function to check user credentials
+function loginUser() {
+  const logInUserEmailInput = document.getElementById("UserLogInEmail");
+  const logInPasswordInput = document.getElementById("UserLogINPassword");
+
+  const logInUserEmail = logInUserEmailInput.value;
+  const logInPassword = logInPasswordInput.value;
+
+  const storedUserEmail = localStorage.getItem('userStudentEmail');
+  const storedPassword = localStorage.getItem('userPassword');
+
+  if (!logInUserEmail || !logInPassword) {
+    alert("Please enter both email and password.");
+  } else if (logInUserEmail === storedUserEmail && logInPassword === storedPassword) {
+    alert("Welcome back, Comrade!");
+
+    // window.location.href = "../home.html";  // Navigate to home
+    window.location.href = "../createpp.html";  // Navigate to createpp
+  } else {
+    alert("Incorrect email or password. Please try again.");
   }
-  
+}
+
+function showStoredPassword() {
+  const password = localStorage.getItem('userPassword');
+  const passwordDiv = document.getElementById('stored-password');
+  const storedUserEmail = localStorage.getItem('userStudentEmail');
+
+  if (password) {
+    passwordDiv.innerHTML = `Stored Email: ${storedUserEmail}  <br>Stored Password: ${password}`;
+
+
+  } else {
+    passwordDiv.innerHTML = 'No password found in local storage.';
+  }
+  // Ensure the password div is visible
+  document.querySelector('.forgot-password').style.display = 'block';
+   // Set a timeout to clear the credentials after 3 seconds
+   setTimeout(() => {
+    passwordDiv.textContent  = ''; // Clear the content
+  }, 3000); // 3000 milliseconds = 3 seconds
+}
+

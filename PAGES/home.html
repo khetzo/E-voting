@@ -5,187 +5,348 @@
     <title>Home Page</title>
     <link href="../STYLESHEETS/stylesheet2.css" rel="stylesheet" type="text/css" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+        }
+        #accordian {
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            height: 100%;
+            overflow-y: auto;
+        }
+        #accordian ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        #accordian li {
+            margin: 10px 0;
+        }
+        #accordian a {
+            color: #fff;
+            text-decoration: none;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        #accordian a:hover {
+            background-color: #555;
+        }
+        .profile-container {
+            flex: 1;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-left: 240px; /* Account for the sidebar */
+            padding: 20px;
+            justify-content: center;
+            align-items: center;
+            overflow-y: auto; /* Allows scrolling if needed */
+        }
+        .profile-card {
+            position: relative;
+            width: 250px;
+            height: 350px; /* Increased height to fit the new elements */
+            perspective: 1000px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform 0.6s, filter 0.6s;
+            cursor: pointer;
+        }
+        .profile-card.zoomed {
+            transform: scale(1.1);
+            filter: blur(5px);
+            z-index: 10;
+        }
+        .profile-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .profile-card:not(.zoomed):hover .profile-card-inner {
+            transform: rotateY(180deg);
+        }
+        .profile-card-front, .profile-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+        .profile-card-front {
+            background-color: #ffffff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-between;
+            text-align: center;
+        }
+        .profile-card-back {
+            background-color: #f4f4f4;
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .profile-card h2 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .profile-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .profile-card-back p {
+            color: #333;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+        .stats {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 20px;
+        }
+        .stat {
+            display: flex;
+            align-items: center;
+            font-size: 14px;
+            color: #666;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.8);
+            padding: 5px 10px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .stat i {
+            margin-right: 5px;
+        }
+        .like-button {
+            margin-top: 20px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 10px 20px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+        }
+        .like-button:hover {
+            background-color: #45a049;
+        }
+        .popup {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+        .popup-content {
+            background: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            width: 80%;
+            max-width: 800px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+            position: relative;
+        }
+        .popup-content img {
+            width: 200px;
+            height: 200px;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4d4d;
+            border: none;
+            color: #fff;
+            border-radius: 50%;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            cursor: pointer;
+        }
+        .close-btn:hover {
+            background: #cc0000;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <div class="container">
-        <div id="accordian">
-            <ul class="show-dropdown main-navbar">
-                <div class="selector-active"><div class="top"></div><div class="bottom"></div></div>
-                <li class="active">
-                    <a href="home.html"><i class="fas fa-tachometer-alt"></i>Dashboard</a>
-                </li>
-                <li>
-                    <a href="createpp.html"><i class="far fa-address-book"></i>Create Profile</a>
-                </li>
-                <li>
-                    <a href="profiles.html"><i class="far fa-clone"></i>Profiles</a>
-                </li>
-                <li>
-                    <a href="castvote.html"><i class="far fa-calendar-alt"></i>Cast Vote</a>
-                </li>
-                <li>
-                    <a href="viewresults.html"><i class="far fa-chart-bar"></i>View Results</a>
-                </li>
-            </ul>
-        </div>
+    <div id="accordian">
+        <ul>
+            <li class="active"><a href="home.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
+            <li><a href="createpp.html"><i class="far fa-address-book"></i> Create Profile</a></li>
+            <li><a href="profiles.html"><i class="far fa-clone"></i> Profiles</a></li>
+            <li><a href="castvote.html"><i class="far fa-calendar-alt"></i> Cast Vote</a></li>
+            <li><a href="viewresults.html"><i class="far fa-chart-bar"></i> View Results</a></li>
+        </ul>
+    </div>
 
-        <div class="leader-grid">
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader1.jpg" alt="Leader 1" class="leader-image">
-                    <h3>Leader Name 1</h3>
-                    <h4>Vote For President</h4>
-                    <p>School: School Name 1</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 1.</p>
-                </div>
-            </div>
+    <div class="profile-container" id="profile-container"></div>
 
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader2.jpg" alt="Leader 2" class="leader-image">
-                    <h3>Leader Name 2</h3>
-                    <h4>Vote For President</h4>
-                    <p>School: School Name 2</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 2.</p>
-                </div>
-            </div>
-
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <h4>Vote For President</h4>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 4</h3>
-                    <h4>Vote For Vice President</h4>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 5</h3>
-                    <h4>Vote For Vice President</h4>
-
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 6</h3>
-                    <h4>Vote For Vice President</h4>
-
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 7</h3>
-                    <h4>Vote For Vice President</h4>
-
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            
-            <div class="leader-card">
-                <div class="card-front">
-                    <img src="leader3.jpg" alt="Leader 3" class="leader-image">
-                    <h3>Leader Name 3</h3>
-                    <p>School: School Name 3</p>
-                </div>
-                <div class="card-back">
-                    <h3>Manifesto</h3>
-                    <p>This is the manifesto message of Leader 3.</p>
-                </div>
-            </div>
-            <!-- Repeat for more leaders -->
+    <!-- Popup for enlarged card -->
+    <div class="popup" id="popup">
+        <div class="popup-content">
+            <button class="close-btn" id="close-btn">&times;</button>
+            <div id="popup-card-content"></div>
         </div>
     </div>
+
+    <script>
+        // Function to get profiles from local storage
+        function getProfilesFromLocalStorage() {
+            const profilesJson = localStorage.getItem('profiles');
+            return profilesJson ? JSON.parse(profilesJson) : [];
+        }
+
+        // Function to generate a random number less than 29
+        function getRandomNumber() {
+            return Math.floor(Math.random() * 29);
+        }
+
+        // Function to create a profile card element
+        function createProfileCard(profile) {
+            const card = document.createElement('div');
+            card.className = 'profile-card';
+            
+            const cardInner = document.createElement('div');
+            cardInner.className = 'profile-card-inner';
+            
+            const cardFront = document.createElement('div');
+            cardFront.className = 'profile-card-front';
+            
+            const cardBack = document.createElement('div');
+            cardBack.className = 'profile-card-back';
+            
+            const img = document.createElement('img');
+            img.src = profile.picture;
+            cardFront.appendChild(img);
+            
+            const name = document.createElement('h2');
+            name.textContent = profile.fullName;
+            cardFront.appendChild(name);
+            
+            const position = document.createElement('p');
+            position.textContent = profile.position;
+            cardFront.appendChild(position);
+            
+            const school = document.createElement('p');
+            school.textContent = `School: ${profile.school}`;
+            cardFront.appendChild(school);
+
+            // Add stats
+            const statsDiv = document.createElement('div');
+            statsDiv.className = 'stats';
+            const viewStat = document.createElement('div');
+            viewStat.className = 'stat';
+            viewStat.innerHTML = `<i class="fas fa-eye"></i> ${getRandomNumber()}`;
+            statsDiv.appendChild(viewStat);
+            
+            const voteStat = document.createElement('div');
+            voteStat.className = 'stat';
+            voteStat.innerHTML = `<i class="fas fa-check-circle"></i> ${getRandomNumber()}`;
+            statsDiv.appendChild(voteStat);
+            
+            const likeStat = document.createElement('div');
+            likeStat.className = 'stat';
+            likeStat.innerHTML = `<i class="fas fa-thumbs-up"></i> ${getRandomNumber()}`;
+            statsDiv.appendChild(likeStat);
+
+            cardFront.appendChild(statsDiv);
+            
+            // Add like button
+            const likeButton = document.createElement('button');
+            likeButton.className = 'like-button';
+            likeButton.textContent = 'Like';
+            likeButton.addEventListener('click', function(e) {
+                e.stopPropagation();
+                alert('Liked!');
+            });
+            cardFront.appendChild(likeButton);
+            
+            const manifestoBack = document.createElement('p');
+            manifestoBack.textContent = profile.manifesto;
+            cardBack.appendChild(manifestoBack);
+            
+            cardInner.appendChild(cardFront);
+            cardInner.appendChild(cardBack);
+            card.appendChild(cardInner);
+
+            card.addEventListener('click', function() {
+                const popup = document.getElementById('popup');
+                const popupCardContent = document.getElementById('popup-card-content');
+                
+                popupCardContent.innerHTML = '';
+                popupCardContent.appendChild(card.cloneNode(true));
+                
+                // Remove flip effect in popup
+                popupCardContent.querySelector('.profile-card-inner').style.transform = 'none';
+
+                popup.style.display = 'flex';
+                document.querySelectorAll('.profile-card').forEach(el => {
+                    el.classList.remove('zoomed');
+                });
+            });
+
+            return card;
+        }
+
+        // Function to display profiles on the page
+        function displayProfiles() {
+            const profiles = getProfilesFromLocalStorage();
+            const profileContainer = document.getElementById('profile-container');
+            profileContainer.innerHTML = ''; // Clear existing content
+            
+            profiles.forEach(profile => {
+                const profileCard = createProfileCard(profile);
+                profileContainer.appendChild(profileCard);
+            });
+        }
+
+        // Close the popup
+        document.getElementById('close-btn').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'none';
+        });
+
+        // Initialize the page with profiles
+        displayProfiles();
+    </script>
 </body>
 </html>

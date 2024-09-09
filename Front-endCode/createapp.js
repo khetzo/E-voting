@@ -11,21 +11,18 @@ let schoolText;
 let positionText;
 let manifestoText;
 let profilePicSrc;
-//
 
-// Function to handle profile picture upload and preview
-function handleProfilePicUpload(event) {
+   // JavaScript to handle profile picture preview
+   document.getElementById('profile-pic-input').addEventListener('change', function(event) {
     const file = event.target.files[0];
     if (file) {
         const reader = new FileReader();
-        reader.onload = function (e) {
-            
+        reader.onload = function(e) {
             document.getElementById('profile-pic-preview').src = e.target.result;
-            profilePicSrc = e.target.result;  // Store the image src
         };
         reader.readAsDataURL(file);
     }
-}
+});
 // Function to create profile and store in localStorage
 function createProfile() {
     // Get values from inputs
@@ -44,15 +41,14 @@ function createProfile() {
         school: schoolText,
         position: positionText,
         manifesto: manifestoText,
-      //  password not yet added
-    //  password:password
+     
     }));          
 
 
 
  //console.log(localStorage.fullName)
     // Navigate to profiles.html
-    alert("Please fill out all fields."+localStorage.fullName);
+    alert("Please fill out all fields."+ localStorage.fullName);
 //fix the path use ../pr then select
     window.location.href = "profiles.html";
 } 

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Profiles</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            background-color: #f4f4f4;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #333;
+            color: #fff;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 24px;
+        }
+        .sidebar a {
+            color: #fff;
+            text-decoration: none;
+            margin: 10px 0;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #555;
+        }
+        .content {
+            flex: 1;
+            padding: 20px;
+            background-color: #fff;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+        .form-container {
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 30px;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        .form-container h2 {
+            margin-top: 0;
+            font-size: 24px;
+            color: #333;
+        }
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 16px;
+        }
+        .form-container button {
+            padding: 12px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+            transition: background-color 0.3s;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+        .form-container img {
+            display: block;
+            margin: 0 auto 20px;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            background-color: #f8f9fa;
+        }
+        .form-container input[type="file"] {
+            padding: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <a href="dummyIndex.html">Home</a>
+        <a href="manage.html">Manage Profiles</a>
+    </div>
+    <div class="content">
+        <h1>Manage Profiles</h1>
+        <div class="form-container">
+            <h2>Add New Profile</h2>
+            <form id="profileForm">
+                <img id="preview" alt="Image Preview">
+                <input type="file" id="picture" accept="image/*" required>
+                <input type="text" id="fullName" placeholder="Full Name" required>
+                <input type="text" id="position" placeholder="Position" required>
+                <input type="text" id="school" placeholder="School" required>
+                <textarea id="manifesto" placeholder="Manifesto" rows="4" required></textarea>
+                <button type="submit">Create Profile</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Function to save profiles to local storage
+        function saveProfilesToLocalStorage(profiles) {
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+        }
+
+        // Function to get profiles from local storage
+        function getProfilesFromLocalStorage() {
+            const profilesJson = localStorage.getItem('profiles');
+            return profilesJson ? JSON.parse(profilesJson) : [];
+        }
+
+        // Function to handle file input and preview
+        document.getElementById('picture').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    document.getElementById('preview').src = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const pictureFile = document.getElementById('picture').files[0];
+            const fullName = document.getElementById('fullName').value;
+            const position = document.getElementById('position').value;
+            const school = document.getElementById('school').value;
+            const manifesto = document.getElementById('manifesto').value;
+
+            if (pictureFile) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const newProfile = {
+                        picture: e.target.result,
+                        fullName,
+                        position,
+                        school,
+                        manifesto
+                    };
+
+                    // Retrieve existing profiles
+                    const profiles = getProfilesFromLocalStorage();
+                    // Add the new profile
+                    profiles.push(newProfile);
+                    // Save the updated profiles
+                    saveProfilesToLocalStorage(profiles);
+
+                    // Clear the form
+                    document.getElementById('profileForm').reset();
+                    document.getElementById('preview').src = '';
+
+                    // Optionally redirect to the home page
+                    window.location.href = 'dummyIndex.html';
+                };
+                reader.readAsDataURL(pictureFile);
+            }
+        });
+    </script>
+</body>
+</html>

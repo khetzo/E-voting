@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background-color: #f4f4f4;
+            padding: 20px;
+        }
+        h1 {
+            margin-bottom: 20px;
+        }
+        .form-container {
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 30px;
+        }
+        .form-container h2 {
+            margin-top: 0;
+        }
+        .form-container input, .form-container textarea {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        .form-container button {
+            padding: 10px 20px;
+            border: none;
+            background-color: #007bff;
+            color: #fff;
+            border-radius: 4px;
+            cursor: pointer;
+            width: 100%;
+        }
+        .form-container button:hover {
+            background-color: #0056b3;
+        }
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+            justify-content: center;
+        }
+        .profile-card {
+            position: relative;
+            width: 250px;
+            height: 300px;
+            perspective: 1000px;
+            margin: 10px;
+        }
+        .profile-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .profile-card:hover .profile-card-inner {
+            transform: rotateY(180deg);
+        }
+        .profile-card-front, .profile-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .profile-card-front {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .profile-card-back {
+            background-color: #f4f4f4;
+            transform: rotateY(180deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            object-fit: cover;
+            margin-bottom: 10px;
+        }
+        .profile-card h2 {
+            margin: 10px 0;
+            font-size: 18px;
+        }
+        .profile-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .profile-card-back p {
+            color: #333;
+            font-size: 16px;
+            padding: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Profile Management</h1>
+    <div class="form-container">
+        <h2>Add New Profile</h2>
+        <form id="profileForm">
+            <input type="text" id="picture" placeholder="Picture URL" required>
+            <input type="text" id="fullName" placeholder="Full Name" required>
+            <input type="text" id="position" placeholder="Position" required>
+            <input type="text" id="school" placeholder="School" required>
+            <textarea id="manifesto" placeholder="Manifesto" rows="4" required></textarea>
+            <button type="submit">Create Profile</button>
+        </form>
+    </div>
+    <div class="profile-container" id="profile-container"></div>
+
+    <script>
+        // Function to save profiles to local storage
+        function saveProfilesToLocalStorage(profiles) {
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+        }
+
+        // Function to get profiles from local storage
+        function getProfilesFromLocalStorage() {
+            const profilesJson = localStorage.getItem('profiles');
+            return profilesJson ? JSON.parse(profilesJson) : [];
+        }
+
+        // Function to generate profile cards
+        function generateProfileCards(profiles) {
+            const container = document.getElementById('profile-container');
+            container.innerHTML = ''; // Clear any existing content
+            profiles.forEach(profile => {
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                
+                card.innerHTML = `
+                    <div class="profile-card-inner">
+                        <div class="profile-card-front">
+                            <img src="${profile.picture}" alt="${profile.fullName}">
+                            <h2>${profile.fullName}</h2>
+                            <p><strong>Position:</strong> ${profile.position}</p>
+                            <p><strong>School:</strong> ${profile.school}</p>
+                        </div>
+                        <div class="profile-card-back">
+                            <img src="${profile.picture}" alt="${profile.fullName}">
+                            <p>${profile.manifesto}</p>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Handle form submission
+        document.getElementById('profileForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            const picture = document.getElementById('picture').value;
+            const fullName = document.getElementById('fullName').value;
+            const position = document.getElementById('position').value;
+            const school = document.getElementById('school').value;
+            const manifesto = document.getElementById('manifesto').value;
+
+            const newProfile = {
+                picture,
+                fullName,
+                position,
+                school,
+                manifesto
+            };
+
+            // Retrieve existing profiles
+            const profiles = getProfilesFromLocalStorage();
+            // Add the new profile
+            profiles.push(newProfile);
+            // Save the updated profiles
+            saveProfilesToLocalStorage(profiles);
+
+            // Refresh the profile cards
+            generateProfileCards(profiles);
+
+            // Clear the form
+            document.getElementById('profileForm').reset();
+        });
+
+        // Initialize profiles on page load
+        window.onload = () => {
+            // Retrieve existing profiles
+            const storedProfiles = getProfilesFromLocalStorage();
+            if (storedProfiles.length === 0) {
+                // Default profiles if none are stored
+                const sampleProfiles = [
+                    {
+                        picture: 'profile-pic1.png',
+                        fullName: 'Alice Johnson',
+                        position: 'President',
+                        school: 'Greenwood High',
+                        manifesto: 'Committed to bringing positive change!'
+                    },
+                    {
+                        picture: 'profile-pic2.png',
+                        fullName: 'Bob Smith',
+                        position: 'Vice President',
+                        school: 'Sunset Academy',
+                        manifesto: 'Dedicated to improving student life!'
+                    },
+                    {
+                        picture: 'profile-pic3.png',
+                        fullName: 'Charlie Brown',
+                        position: 'Secretary',
+                        school: 'Riverside School',
+                        manifesto: 'Ensuring clear communication and transparency!'
+                    }
+                ];
+                // Save default profiles
+                saveProfilesToLocalStorage(sampleProfiles);
+                generateProfileCards(sampleProfiles);
+            } else {
+                generateProfileCards(storedProfiles);
+            }
+        };
+    </script>
+</body>
+</html>

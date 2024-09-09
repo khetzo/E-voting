@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile Display</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+        .sidebar {
+            width: 220px;
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        }
+        .sidebar h2 {
+            margin-top: 0;
+            font-size: 22px;
+            font-weight: bold;
+        }
+        .sidebar a {
+            color: #ecf0f1;
+            text-decoration: none;
+            margin: 15px 0;
+            display: block;
+            padding: 10px;
+            border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+        .sidebar a:hover {
+            background-color: #34495e;
+        }
+        .content {
+            flex: 1;
+            padding: 40px;
+            background-color: #ffffff;
+            max-width: 1200px;
+            margin: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .profile-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+        }
+        .profile-card {
+            position: relative;
+            width: 300px;
+            height: 350px;
+            perspective: 1000px;
+            margin: 15px;
+        }
+        .profile-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            transition: transform 0.6s;
+        }
+        .profile-card:hover .profile-card-inner {
+            transform: rotateY(180deg);
+        }
+        .profile-card-front, .profile-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .profile-card-front {
+            background-color: #fff;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .profile-card-back {
+            background-color: #ecf0f1;
+            transform: rotateY(180deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            padding: 20px;
+            text-align: center;
+        }
+        .profile-card img {
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            object-fit: cover;
+            border: 2px solid #ddd;
+            margin-bottom: 10px;
+        }
+        .profile-card h2 {
+            margin: 10px 0;
+            font-size: 20px;
+            color: #333;
+        }
+        .profile-card p {
+            margin: 5px 0;
+            color: #666;
+        }
+        .profile-card-back p {
+            color: #333;
+            font-size: 16px;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="sidebar">
+        <h2>Menu</h2>
+        <a href="dummyIndex.html">Home</a>
+        <a href="manage.html">Manage Profiles</a>
+    </div>
+    <div class="content">
+        <h1>Profile Cards</h1>
+        <div class="profile-container" id="profile-container"></div>
+    </div>
+
+    <script>
+        // Function to save profiles to local storage
+        function saveProfilesToLocalStorage(profiles) {
+            localStorage.setItem('profiles', JSON.stringify(profiles));
+        }
+
+        // Function to get profiles from local storage
+        function getProfilesFromLocalStorage() {
+            const profilesJson = localStorage.getItem('profiles');
+            return profilesJson ? JSON.parse(profilesJson) : [];
+        }
+
+        // Function to generate profile cards
+        function generateProfileCards(profiles) {
+            const container = document.getElementById('profile-container');
+            container.innerHTML = ''; // Clear any existing content
+            profiles.forEach(profile => {
+                const card = document.createElement('div');
+                card.className = 'profile-card';
+                
+                card.innerHTML = `
+                    <div class="profile-card-inner">
+                        <div class="profile-card-front">
+                            <img src="${profile.picture}" alt="${profile.fullName}">
+                            <h2>${profile.fullName}</h2>
+                            <p><strong>Position:</strong> ${profile.position}</p>
+                            <p><strong>School:</strong> ${profile.school}</p>
+                        </div>
+                        <div class="profile-card-back">
+                            <img src="${profile.picture}" alt="${profile.fullName}">
+                            <p>${profile.manifesto}</p>
+                        </div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        // Initialize profiles on page load
+        window.onload = () => {
+            // Retrieve existing profiles
+            const storedProfiles = getProfilesFromLocalStorage();
+            if (storedProfiles.length === 0) {
+                // Default profiles if none are stored
+                const sampleProfiles = [
+                    {
+                        picture: 'profile-pic1.png',
+                        fullName: 'Alice Johnson',
+                        position: 'President',
+                        school: 'Greenwood High',
+                        manifesto: 'Committed to bringing positive change!'
+                    },
+                    {
+                        picture: 'profile-pic2.png',
+                        fullName: 'Bob Smith',
+                        position: 'Vice President',
+                        school: 'Sunset Academy',
+                        manifesto: 'Dedicated to improving student life!'
+                    },
+                    {
+                        picture: 'profile-pic3.png',
+                        fullName: 'Charlie Brown',
+                        position: 'Secretary',
+                        school: 'Riverside School',
+                        manifesto: 'Ensuring clear communication and transparency!'
+                    }
+                ];
+                // Save default profiles
+                saveProfilesToLocalStorage(sampleProfiles);
+                generateProfileCards(sampleProfiles);
+            } else {
+                generateProfileCards(storedProfiles);
+            }
+        };
+    </script>
+</body>
+</html>

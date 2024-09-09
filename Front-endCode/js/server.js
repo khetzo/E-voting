@@ -1,15 +1,15 @@
-const nodemailer = require('nodemailer');
-const express = require('express');
-const bodyParser = require('body-parser');
+import { createTransport } from 'nodemailer';
+import express from 'express';
+import { json } from 'body-parser';
 const app = express();
 
-app.use(bodyParser.json());
+app.use(json());
 
 app.post('/send-email', (req, res) => {
     const { email } = req.body;
 
     // Set up Nodemailer transporter
-    const transporter = nodemailer.createTransport({
+    const transporter = createTransport({
         service: 'gmail',
         auth: {
             user: 'your-email@gmail.com',

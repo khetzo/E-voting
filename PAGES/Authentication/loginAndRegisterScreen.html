@@ -23,7 +23,7 @@
     <div class="container">
       <div class="forms-container">
         <div class="signin-signup">
-          <form action="#" class="sign-in-form">
+          <form action="#" class="sign-in-form"  id="registerForm">
             <h2 class="title">Sign in</h2>
             <div class="input-field">
               <i class="fas fa-user"></i>
@@ -34,7 +34,10 @@
               <input type="password" placeholder="Password" id="UserLogINPassword"   class="normal" />
             </div>
             <button type="button"  class="btn solid"  onclick="loginUser()" >Sign up</button>
-
+   <div class="forgot-password">
+      <a href="#" onclick="showStoredPassword()">Forgot Password?</a>
+      <div id="stored-password" style="margin-top: 10px; color: red;"></div>
+    </div>
             <p class="social-text">find more about us on social platforms</p>
             <div class="social-media">
               <a href="#" class="social-icon">
@@ -120,5 +123,8 @@
 <script src="../../Front-endCode/UserIdentifire.js"></script>
     <script src="../../Front-endCode/js/login.js"></script>
     <script src ="./authentication.js"></script>
+  
+ 
+
   </body>
 </html>

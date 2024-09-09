@@ -170,6 +170,7 @@ h6 {
 	border-radius: 10px;
 }
 
+
 .leader-card:hover .card-front {
     transform: rotateY(-180deg);
 }
@@ -226,3 +227,4 @@ p {
     color: #666;
     text-align: center;
 }
+/* to be modified  */
